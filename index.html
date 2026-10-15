@@ -4,33 +4,43 @@
 <meta charset="utf-8">
 <title>UML 类图编辑器</title>
 <style>
-:root{--bg:#141519;--panel:#1d1f26;--panel2:#232630;--border:#31343f;--text:#e8eaf0;--muted:#9aa1b2;--accent:#4f8cff}
+:root{
+  --bg:#b3b0aa;--bg-deep:#a8a5a0;--panel:#c9c6c0;--panel-2:#dcd9d3;--field:#dcd9d3;--field-line:#9b988f;
+  --ink:#292722;--ink-soft:#45413a;--ink-mute:#6e6a61;--line:#8f8c86;--line-soft:#a5a29c;
+  --accent:#d9480f;--accent-deep:#a33d12;--paper:#f4f2ee;
+  --font-disp:Georgia,"Times New Roman","STZhongsong","SimSun",serif;
+  --font-ui:"Segoe UI","Microsoft YaHei","PingFang SC",system-ui,sans-serif;
+  color-scheme:light;
+}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;user-select:none}
+body{font-family:var(--font-ui);background:linear-gradient(#b7b4ae,#b0ada7);color:var(--ink);overflow:hidden;user-select:none}
 #app{display:flex;flex-direction:column;height:100vh}
-header{display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--panel);border-bottom:1px solid var(--border);flex-wrap:wrap}
-.logo{font-weight:700;font-size:15px;margin-right:10px;color:#fff}
-.logo .dot{color:var(--accent)}
-button.tb{background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer;font-family:inherit}
-button.tb:hover{border-color:#4a4f60;background:#2a2e3a}
-button.tb.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+#app::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.13;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.55'/></svg>")}
+header{display:flex;align-items:center;gap:6px;padding:8px 12px;background:#33302b;border-bottom:1px solid #24211d;flex-wrap:wrap}
+.logo{font-family:var(--font-disp);font-weight:700;font-size:15px;margin-right:10px;color:#ecebe7;letter-spacing:.06em}
+.logo .dot{color:var(--accent);margin:0 2px}
+button.tb{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:2px;padding:6px 12px;font-size:13px;cursor:pointer;font-family:inherit;box-shadow:2px 2px 0 rgba(24,22,18,.32)}
+button.tb:hover{background:var(--panel-2)}
+button.tb:active:not(:disabled){transform:translate(1px,1px);box-shadow:1px 1px 0 rgba(24,22,18,.3)}
+button.tb.primary{background:var(--accent);border-color:var(--accent-deep);color:#fff;box-shadow:2px 2px 0 rgba(24,22,18,.38)}
 button.tb:disabled{opacity:.4;cursor:default}
-.sep{width:1px;height:22px;background:var(--border);margin:0 4px}
+.sep{width:1px;height:22px;background:#4a463f;margin:0 4px}
 .spacer{flex:1}
-#zoomLabel{min-width:46px;text-align:center;color:var(--muted);font-size:12.5px}
+#zoomLabel{min-width:46px;text-align:center;color:rgba(236,235,231,.75);font-size:12.5px}
 .menu-wrap{position:relative}
-.menu{position:absolute;top:calc(100% + 6px);left:0;background:var(--panel2);border:1px solid var(--border);border-radius:10px;min-width:230px;padding:6px;display:none;z-index:50;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.menu{position:absolute;top:calc(100% + 6px);left:0;background:var(--panel);border:1px solid var(--line);border-radius:2px;min-width:230px;padding:6px;display:none;z-index:50;box-shadow:4px 4px 0 rgba(24,22,18,.35)}
 .menu.open{display:block}
-.menu button{display:block;width:100%;text-align:left;background:none;border:none;color:var(--text);padding:8px 10px;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit}
-.menu button:hover{background:#313648}
-.menu .hint{display:block;font-size:11px;color:var(--muted);margin-top:1px}
+.menu button{display:block;width:100%;text-align:left;background:none;border:none;color:var(--ink);padding:8px 10px;border-radius:2px;font-size:13px;cursor:pointer;font-family:inherit}
+.menu button:hover{background:var(--panel-2)}
+.menu .hint{display:block;font-size:11px;color:var(--ink-mute);margin-top:1px}
 main{flex:1;display:flex;min-height:0}
-#palette{width:80px;background:var(--panel);border-right:1px solid var(--border);padding:8px 6px;display:flex;flex-direction:column;gap:4px;overflow-y:auto}
-.pal-label{font-size:10px;color:var(--muted);margin:6px 2px 2px;letter-spacing:.08em}
-.pal{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;border-radius:8px;border:1px solid transparent;background:none;color:var(--muted);cursor:pointer;font-size:11px;font-family:inherit}
-.pal:hover{background:var(--panel2);color:var(--text)}
-.pal.active{border-color:var(--accent);background:rgba(79,140,255,.12);color:var(--text)}
+#palette{width:80px;background:var(--panel);border-right:1px solid var(--line);padding:8px 6px;display:flex;flex-direction:column;gap:4px;overflow-y:auto}
+.pal-label{font-size:10px;color:var(--ink-mute);margin:6px 2px 2px;letter-spacing:.14em}
+.pal{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;border-radius:2px;border:1px solid transparent;background:none;color:var(--ink-mute);cursor:pointer;font-size:11px;font-family:inherit}
+.pal:hover{background:var(--panel-2);color:var(--ink)}
+.pal.active{border-color:var(--accent);background:rgba(217,72,15,.13);color:var(--accent-deep)}
 .pal svg{display:block}
 #canvasWrap{flex:1;position:relative;min-width:0}
 #canvasWrap.cross{cursor:crosshair}
@@ -41,22 +51,23 @@ g.node .cover{pointer-events:all}
 g.edgeg{cursor:pointer}
 g.edgeg *{pointer-events:none}
 g.edgeg .edgehit{pointer-events:stroke}
-g.node:hover .body{stroke:#5b6377}
-#inspector{width:272px;background:var(--panel);border-left:1px solid var(--border);padding:12px;overflow-y:auto;font-size:13px}
-#inspector h3{font-size:13px;color:#fff;margin:2px 0 12px}
-footer{display:flex;justify-content:space-between;gap:16px;padding:5px 12px;background:var(--panel);border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
+g.node:hover .body{stroke:#77736a}
+#inspector{width:272px;background:var(--panel);border-left:1px solid var(--line);padding:12px;overflow-y:auto;font-size:13px;color:var(--ink)}
+#inspector h3{font-family:var(--font-disp);font-size:14px;color:var(--ink);margin:2px 0 12px;letter-spacing:.05em}
+footer{display:flex;justify-content:space-between;gap:16px;padding:5px 12px;background:var(--panel);border-top:1px solid var(--line);font-size:12px;color:var(--ink-mute)}
 #hint{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-input[type=text],select,textarea{width:100%;background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:6px 8px;font-size:13px;font-family:inherit;user-select:text}
-textarea{font-family:"Cascadia Mono",Consolas,"Courier New",monospace;font-size:12.5px;resize:vertical;line-height:1.5}
+input[type=text],select,textarea{width:100%;background:var(--field);border:1px solid var(--field-line);color:var(--ink);border-radius:2px;padding:6px 8px;font-size:13px;font-family:inherit;user-select:text}
+input[type=text]:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+textarea{font-family:Consolas,Menlo,"Courier New",monospace;font-size:12.5px;resize:vertical;line-height:1.5}
 select{cursor:pointer}
 .field{margin-bottom:10px}
-.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.field label{display:block;font-size:12px;color:var(--ink-mute);margin-bottom:4px;letter-spacing:.03em}
 .fieldrow{display:flex;gap:8px}
 .fieldrow .field{flex:1}
 button.tb.block{width:100%;margin-top:8px}
-.danger{border-color:#8f4636!important;color:#ff9d84!important}
-.hintbox{color:var(--muted);font-size:12.5px;line-height:1.9}
-kbd{background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:0 5px;font-size:11px}
+.danger{border-color:#8a3a1a!important;color:var(--accent-deep)!important;background:var(--field)!important}
+.hintbox{color:var(--ink-soft);font-size:12.5px;line-height:1.9}
+kbd{background:var(--panel-2);border:1px solid var(--line);border-bottom-width:2px;border-radius:2px;padding:0 5px;font-size:11px;color:var(--ink)}
 </style>
 </head>
 <body>
@@ -100,13 +111,14 @@ const SVGNS='http://www.w3.org/2000/svg';
 const $=id=>document.getElementById(id);
 const svg=$('canvas'),insp=$('inspector'),hintEl=$('hint'),statsEl=$('stats'),canvasWrap=$('canvasWrap'),fileInput=$('fileInput');
 
-const C={bg:'#17191f',gridMinor:'#1f222a',gridMajor:'#262a35',nodeBg:'#242834',border:'#3f4657',text:'#e9ebf2',member:'#c7cede',edge:'#98a0b0',sel:'#4f8cff',
-        noteBg:'#f3e3a4',noteBorder:'#cdb35a',noteText:'#5a4c10',label:'#b7bdc9'};
-const ACC={class:'#4f8cff',abstract:'#f0a83b',interface:'#a78bfa',enum:'#3ddba0',note:'#eab308'};
-const VIS={'+':'#3ddba0','-':'#f87171','#':'#f2c04b','~':'#61a8ff'};
-const F_SANS='"Segoe UI","Microsoft YaHei",system-ui,sans-serif';
-const F_MONO='"Cascadia Mono",Consolas,"Courier New",monospace';
-const NAMEF='600 14px '+F_SANS, MEMF='12.5px '+F_MONO, STEREOF='italic 11.5px '+F_SANS, LABELF='11.5px '+F_SANS, NOTEF='12.5px '+F_SANS;
+const C={bg:'#a29f99',gridMinor:'#99968f',gridMajor:'#8b8881',nodeBg:'#dcd9d3',border:'#8f8c86',text:'#292722',member:'#45413a',edge:'#55524a',sel:'#d9480f',
+        noteBg:'#e9d8b4',noteBorder:'#ab9265',noteText:'#57451f',label:'#33302b',chipBg:'#c9c6c0',chipLine:'#8f8c86',shadow:'#181612'};
+const ACC={class:'#cf430e',abstract:'#9a6f14',interface:'#48657f',enum:'#557049',note:'#a08a55'};
+const VIS={'+':'#557049','-':'#b0402a','#':'#9a6f14','~':'#48657f'};
+const F_SANS='"Segoe UI","Microsoft YaHei","PingFang SC",system-ui,sans-serif';
+const F_DISP='Georgia,"Times New Roman","STZhongsong","SimSun",serif';
+const F_MONO='Consolas,Menlo,"Courier New",monospace';
+const NAMEF='700 14px '+F_DISP, MEMF='12.5px '+F_MONO, STEREOF='italic 11.5px '+F_SANS, LABELF='11.5px '+F_SANS, NOTEF='12.5px '+F_SANS;
 
 const RELS={association:'关联',inheritance:'泛化（继承）',realization:'实现',composition:'组合',aggregation:'聚合',dependency:'依赖'};
 const REL_SHORT={association:'关联',inheritance:'泛化',realization:'实现',composition:'组合',aggregation:'聚合',dependency:'依赖'};
@@ -205,16 +217,17 @@ function buildNode(n,chrome){
   const accent=ACC[n.type]||ACC.class;
   const g=el('g',{transform:'translate('+n.x+' '+n.y+')','data-id':n.id});
   g.classList.add('node');
+  el('rect',{x:3,y:3,width:n.w,height:n.h,rx:2,fill:C.shadow,'fill-opacity':.22},g);
   if(n.type==='note'){
-    el('rect',{x:0,y:0,width:n.w,height:n.h,rx:7,fill:C.noteBg,stroke:C.noteBorder,'stroke-width':1.2,'class':'body'},g);
+    el('rect',{x:0,y:0,width:n.w,height:n.h,rx:2,fill:C.noteBg,stroke:C.noteBorder,'stroke-width':1.2,'class':'body'},g);
     (n._lines||['']).forEach((s,i)=>txt(12,17+i*19,s,{fill:C.noteText,'font-family':F_SANS,'font-size':12.5},g));
   }else{
-    el('rect',{x:0,y:0,width:n.w,height:n.h,rx:8,fill:C.nodeBg,stroke:C.border,'stroke-width':1.2,'class':'body'},g);
-    const r=8,h=n._hdr;
+    el('rect',{x:0,y:0,width:n.w,height:n.h,rx:2,fill:C.nodeBg,stroke:C.border,'stroke-width':1.2,'class':'body'},g);
+    const r=2,h=n._hdr;
     el('path',{d:'M0,'+r+' a'+r+','+r+' 0 0 1 '+r+',-'+r+' h'+(n.w-2*r)+' a'+r+','+r+' 0 0 1 '+r+','+r+' v'+(h-r)+' h-'+n.w+' z',fill:accent,'fill-opacity':.15},g);
     const hasSt=(n.type==='interface'||n.type==='enum');
     if(hasSt)txt(n.w/2,16,n.type==='interface'?'«interface»':'«enumeration»',{fill:accent,'text-anchor':'middle','font-family':F_SANS,'font-size':11.5,'font-style':'italic'},g);
-    txt(n.w/2,hasSt?36:20,n.name||'未命名',{fill:C.text,'text-anchor':'middle','font-family':F_SANS,'font-size':14,'font-weight':600,'font-style':n.type==='abstract'?'italic':'normal'},g);
+    txt(n.w/2,hasSt?36:20,n.name||'未命名',{fill:C.text,'text-anchor':'middle','font-family':F_DISP,'font-size':14,'font-weight':700,'font-style':n.type==='abstract'?'italic':'normal'},g);
     el('line',{x1:0,y1:h,x2:n.w,y2:h,stroke:C.border,'stroke-width':1},g);
     let y=h+18;
     const sep2=h+((n.attrs&&n.attrs.length)?n.attrs.length*19+10:0);
@@ -226,8 +239,8 @@ function buildNode(n,chrome){
       for(const s of n.methods){memberText(g,s,y);y+=19;}
     }
   }
-  if(selected)el('rect',{x:-4,y:-4,width:n.w+8,height:n.h+8,rx:11,fill:'none',stroke:C.sel,'stroke-width':2},g);
-  if(isSrc)el('rect',{x:-4,y:-4,width:n.w+8,height:n.h+8,rx:11,fill:'none',stroke:C.sel,'stroke-width':1.6,'stroke-dasharray':'5 4'},g);
+  if(selected)el('rect',{x:-4,y:-4,width:n.w+8,height:n.h+8,rx:4,fill:'none',stroke:C.sel,'stroke-width':2},g);
+  if(isSrc)el('rect',{x:-4,y:-4,width:n.w+8,height:n.h+8,rx:4,fill:'none',stroke:C.sel,'stroke-width':1.6,'stroke-dasharray':'5 4'},g);
   if(chrome){
     el('rect',{x:0,y:0,width:n.w,height:n.h,fill:'transparent',stroke:'none','pointer-events':'all','class':'cover'},g);
     g.addEventListener('pointerdown',ev=>nodeDown(n.id,ev));
@@ -242,8 +255,8 @@ function buildNode(n,chrome){
 function addLabel(g,p,s,col,emph){
   const w=tw(s,LABELF)+10;
   const rx=p.anchor==='start'?p.x-4:p.x-w/2;
-  el('rect',{x:rx,y:p.y-11.5,width:w,height:16,rx:3,fill:C.bg,'fill-opacity':.85},g);
-  txt(p.x,p.y,s,{'text-anchor':p.anchor||'middle',fill:emph?C.sel:(col||C.label),'font-family':F_SANS,'font-size':11.5},g);
+  el('rect',{x:rx,y:p.y-11.5,width:w,height:16,rx:2,fill:C.chipBg,stroke:C.chipLine,'stroke-width':1,'fill-opacity':.95},g);
+  txt(p.x,p.y,s,{'text-anchor':p.anchor||'middle',fill:emph?C.sel:C.label,'font-family':F_SANS,'font-size':11.5},g);
 }
 function buildEdge(e,chrome){
   const selected=chrome&&sel&&sel.kind==='edge'&&sel.id===e.id;
@@ -547,7 +560,7 @@ const ICON={
   aggregation:'<svg width="30" height="18" viewBox="0 0 30 18" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="2,9 9,5.2 16,9 9,12.8"/><line x1="16" y1="9" x2="27" y2="9"/></svg>',
   dependency:'<svg width="30" height="18" viewBox="0 0 30 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="2" y1="9" x2="27" y2="9" stroke-dasharray="3 2.4"/><path d="M27 9 L20 4.6 M27 9 L20 13.4"/></svg>',
   class:'<svg width="22" height="20" viewBox="0 0 22 20" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="1.5" width="19" height="17" rx="2"/><line x1="1.5" y1="7" x2="20.5" y2="7"/><line x1="1.5" y1="12.5" x2="20.5" y2="12.5"/></svg>',
-  note:'<svg width="22" height="20" viewBox="0 0 22 20" fill="none" stroke-width="1.2"><rect x="1.5" y="1.5" width="19" height="17" rx="2" fill="#f3e3a4" stroke="#cdb35a"/><line x1="5" y1="6.5" x2="16" y2="6.5" stroke="#8a7420"/><line x1="5" y1="10.5" x2="16" y2="10.5" stroke="#8a7420"/><line x1="5" y1="14.5" x2="12" y2="14.5" stroke="#8a7420"/></svg>'
+  note:'<svg width="22" height="20" viewBox="0 0 22 20" fill="none" stroke-width="1.2"><rect x="1.5" y="1.5" width="19" height="17" rx="2" fill="#e9d8b4" stroke="#ab9265"/><line x1="5" y1="6.5" x2="16" y2="6.5" stroke="#7a6633"/><line x1="5" y1="10.5" x2="16" y2="10.5" stroke="#7a6633"/><line x1="5" y1="14.5" x2="12" y2="14.5" stroke="#7a6633"/></svg>'
 };
 const NODE_ICON={class:ICON.class,interface:ICON.class,abstract:ICON.class,enum:ICON.class,note:ICON.note};
 const PAL=[
